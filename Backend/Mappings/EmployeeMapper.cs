@@ -13,7 +13,9 @@ namespace Backend.Mappings
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Email = employee.Email,
-                Department = employee.Department
+                //Department = employee.Department
+                DepartmentId = employee.DepartmentId,
+                DepartmentName = employee.Department?.Name
             };
 
         }
@@ -25,7 +27,7 @@ namespace Backend.Mappings
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                Department = dto.Department
+                DepartmentId = dto.DepartmentId
             };
         }
 
@@ -37,7 +39,9 @@ namespace Backend.Mappings
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                Department = dto.Department
+                //Department = dto.Department
+                DepartmentId = dto.DepartmentId
+
             };
         }
     }

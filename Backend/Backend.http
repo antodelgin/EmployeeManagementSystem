@@ -1,6 +1,8 @@
-@Backend_HostAddress = http://localhost:5281
+@Backend_HostAddress = http://localhost:5000
 
-GET {{Backend_HostAddress}}/weatherforecast/
+GET http://localhost:5000/Employee/1
 Accept: application/json
 
-#
+### Get Employee by ID
+# GET 
+# Accept: application/json

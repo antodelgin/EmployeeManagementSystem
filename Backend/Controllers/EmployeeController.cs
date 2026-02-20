@@ -11,26 +11,12 @@ namespace Backend.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
 
         private EmployeeService employeeService;
 
         public EmployeeController(EmployeeService employeeService ) {
             this.employeeService = employeeService;
         }
-
-        //[HttpPost("create")]
-        //public IActionResult AddEmployee([FromBody] Employee employee)
-        //{
-        //    var emp = employeeService.CreateEmployee(employee);
-        //    if (emp == null)
-        //        return BadRequest(new { message = "Email already exists" });
-
-        //    return Ok(emp);
-        //}
 
         [HttpPost("create")]
         public IActionResult AddEmployee([FromBody] CreateEmployeeDto dto)
@@ -46,20 +32,21 @@ namespace Backend.Controllers
         public IActionResult FindEmployee([FromRoute] int id)
         {
             var emp = employeeService.FindEmployeeByID(id);
+            //Console.WriteLine(emp);
             return Ok(emp);
         }
 
         [HttpGet("list")]
-        public IActionResult GetEmployees()
+        public IActionResult GetEmployees([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var employees = employeeService.FindAllEmployees();
+            var employees = employeeService.FindAllEmployees(pageNumber, pageSize);
             return Ok(employees);
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateEmployee(int id, [FromBody] Employee employee)
+        public IActionResult UpdateEmployee(int id, [FromBody] CreateEmployeeDto dto)
         {
-            var updatedEmp = employeeService.UpdateEmployee(id, employee);
+            var updatedEmp = employeeService.UpdateEmployee(id, dto);
 
             if (updatedEmp == null)
                 return NotFound($"Employee with id {id} not found");
@@ -76,18 +63,13 @@ namespace Backend.Controllers
         public IActionResult DeleteEmployee(int id)
         {
             var deleted = employeeService.DeleteEmployee(id);
-            //Console.WriteLine("fkjhakjfhk");
+            //Console.WriteLine("ksdfj");
 
             if (!deleted) return NotFound($"employee with id: {id} not found");
 
             return Ok(new {message = $"Deleted employee id: {id}"});
 
-
-
         }
-
-
-
 
     }
 }
