@@ -1,12 +1,13 @@
 ﻿using Backend.Dto;
 using Backend.Model;
 using Backend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
 namespace Backend.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
@@ -18,12 +19,57 @@ namespace Backend.Controllers
             this.employeeService = employeeService;
         }
 
+
+        //[HttpGet("department/{id}")]
+        //public IActionResult Practise(int id,
+        //    [FromQuery] int pageNumber = 1,
+        //    [FromQuery] int pageSize = 10)
+        //{
+        //    var employees = employeeService.FindEmployeeInSameDepartment(id, pageNumber, pageSize);
+
+        //    return Ok(employees);
+        //}
+        //    var emp = employeeService.FindEmployeeInSameDepartment(id);
+
+        //    return Ok(emp);
+        //}
+
+
+        [HttpGet("department/{id}")]
+        public IActionResult FindEmployeeInDepartment(
+        int id,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+        {
+            var employees = employeeService.FindEmployeeInSameDepartment(id, pageNumber, pageSize);
+            return Ok(employees);
+        }
+
+        //[HttpGet("search")]
+        //public IActionResult SearchEmployees(string name)
+        //{
+        //    var employees = employeeService.SearchEmployees(name);
+        //    return Ok(employees);
+        //}
+
+        [HttpGet("search")]
+        public IActionResult SearchEmployees(
+            string name,
+            int departmentId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            var employees = employeeService.SearchEmployees(name, departmentId, pageNumber, pageSize);
+            return Ok(employees);
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public IActionResult AddEmployee([FromBody] CreateEmployeeDto dto)
         {
             var emp = employeeService.CreateEmployee(dto);
-            if (emp == null)
-                return BadRequest(new { message = "Email already exists" });
+            //if (emp == null)
+            //    return BadRequest(new { message = "Email already exists" });
 
             return Ok(emp);
         }
@@ -36,6 +82,8 @@ namespace Backend.Controllers
             return Ok(emp);
         }
 
+
+        [Authorize]
         [HttpGet("list")]
         public IActionResult GetEmployees([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -48,8 +96,8 @@ namespace Backend.Controllers
         {
             var updatedEmp = employeeService.UpdateEmployee(id, dto);
 
-            if (updatedEmp == null)
-                return NotFound($"Employee with id {id} not found");
+            //if (updatedEmp == null)
+            //    return NotFound($"Employee with id {id} not found");
 
             return Ok(new
             {
@@ -59,6 +107,7 @@ namespace Backend.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteEmployee(int id)
         {

@@ -2,10 +2,12 @@ using Backend.Dto;
 using Backend.Model;
 using Backend.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Runtime.CompilerServices;
 
 namespace Backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class DepartmentController : ControllerBase
@@ -37,6 +39,5 @@ namespace Backend.Controllers
             return Ok(departments);
         }
     }
-
 
 }
