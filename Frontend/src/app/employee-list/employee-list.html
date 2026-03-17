@@ -1,0 +1,61 @@
+
+
+<div class="filter">
+  <label>Filter by Department:</label>
+  <select (change)="onFilterChange($any($event.target).value)">
+    <option value="">All Departments</option>
+    <option value="1">IT</option>
+    <option value="2">Marketing</option>
+    <option value="3">Finance</option>
+    <option value="4">HR</option>
+  </select>
+
+  <button (click)="clearFilter()">Reset</button>
+</div>
+
+<input type="text" [(ngModel)]="employeeName" placeholder="Search employee" />
+<button (click)="searchEmployee()">Search</button>
+
+
+<div class="list-container" *ngIf="employees$ | async as employees">
+
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <!--<th>ID</th>-->
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th class="action" *ngIf="(authService.role$ | async) === 'Admin'">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees; let i = index ">
+        <!--<td>{{ i+1 }}</td>-->
+        <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+        <!--<td>{{ employee.id }}</td>-->
+        <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.departmentName }}</td>
+        <td class="action" *ngIf="(authService.role$ | async) === 'Admin'">
+          <button [routerLink]="['/Employee', employee.id]">View</button>
+          <button (click)="deleteEmployee(employee.id)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="employees.length === 0">
+        <td colspan="5" style="text-align:center;">No employees found</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <div class="pagination">
+    <button class="page-btn" (click)="prevPage()" [disabled]="pageNumber === 1"><<</button>
+    <span>Page {{ pageNumber }} of {{ totalPages }}</span>
+    <button class="page-btn" (click)="nextPage()" [disabled]="pageNumber === totalPages">>></button>
+  </div>
+
+
+</div>
+

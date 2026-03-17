@@ -1,0 +1,29 @@
+<!--<header class="app-header">
+  <h1 class="logo">Employee Management</h1>
+
+  <nav class="nav-links">
+    <a *ngIf="isLoggedIn$ | async" [routerLink]="['/Employee/list']" routerLinkActive="active">Employee List</a>
+    <a *ngIf="isLoggedIn$ | async" [routerLink]="['/Employee/create']" routerLinkActive="active">Add Employee</a>
+  </nav>
+  <button *ngIf="(isLoggedIn$ | async)" (click)="logout()">Logout</button>
+</header>-->
+<header class="app-header">
+  <h1 class="logo">Employee Management</h1>
+
+  <nav class="nav-links">
+    <a *ngIf="isLoggedIn$ | async"
+       [routerLink]="['/Employee/list']"
+       routerLinkActive="active">
+      Employee List
+    </a>
+
+    <a *ngIf="(authService.role$ | async) === 'Admin'"
+       [routerLink]="['/Employee/create']"
+       routerLinkActive="active">
+      Add Employee
+    </a>
+
+  </nav>
+
+  <button *ngIf="(isLoggedIn$ | async)" (click)="logout()">Logout</button>
+</header>

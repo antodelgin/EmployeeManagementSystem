@@ -1,0 +1,46 @@
+
+<form [formGroup]="signUpForm" class="signup-form" (ngSubmit)="onSubmit()">
+
+  <h2>Sign Up</h2>
+
+  <label>Username</label>
+  <input type="text" formControlName="username" placeholder="Your username">
+
+  <label>
+    Email
+  </label>
+  <input type="email" formControlName="email" placeholder="Your email">
+  <div *ngIf="signUpForm.controls['email'].invalid && (signUpForm.controls['email'].dirty || signUpForm.controls['email'].touched || submitted)" style="color:crimson">
+    <small *ngIf="signUpForm.controls['email'].errors && signUpForm.controls['email'].errors['required']">Email is required.</small>
+    <small *ngIf="signUpForm.controls['email'].errors && signUpForm.controls['email'].errors['email']">Email must be valid.</small>
+  </div>
+
+  <label>
+    Password
+  </label>
+  <input type="password" formControlName="password" placeholder="Your password">
+  <div *ngIf="signUpForm.controls['password'].invalid && (signUpForm.controls['password'].dirty || signUpForm.controls['password'].touched || submitted)" style="color:crimson">
+    <small *ngIf="signUpForm.controls['password'].errors && signUpForm.controls['password'].errors['required']">Password is required.</small>
+    <small *ngIf="signUpForm.controls['password'].errors && signUpForm.controls['password'].errors['minlength']">Password should be alteast 6 characters.</small>
+  </div>
+
+  <label>Role</label>
+  <select formControlName="role">
+    <option value="" disabled >Select role</option>
+    <option value="User">User</option>
+    <option value="Admin">Admin</option>
+  </select>
+
+  <div *ngIf="signUpForm.controls['role'].invalid && submitted" style="color:crimson">
+    <small>Role is required.</small>
+  </div>
+
+  <button type="submit">Sign Up</button>
+
+  <p *ngIf="success" class="success">Account created successfully!</p>
+
+
+  <p>Already have an account? <a routerLink="/Auth/validate">Login</a> here</p>
+
+</form>
+

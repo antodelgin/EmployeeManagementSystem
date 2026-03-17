@@ -1,0 +1,35 @@
+
+
+
+<div class="form-container">
+  <form [formGroup]="employeeCreationForm" class="" (ngSubmit)="onSubmit()">
+
+
+    <h2>Employee Form</h2>
+
+    <label>First Name</label>
+    <input type="text" formControlName="firstName" placeholder="Enter first name" />
+
+    <label>Last Name</label>
+    <input type="text" formControlName="lastName" placeholder="Enter last name" />
+
+    <label>Email</label>
+    <input type="email" formControlName="email" placeholder="Enter email address" />
+
+    <label>Department</label>
+    <select class="dropdown-placeholder" formControlName="departmentId">
+
+      <option value="" disabled >Select Department</option>
+      <option *ngFor="let dept of departments" [ngValue]="dept.id">{{ dept.name }}</option>
+    </select>
+
+
+    <p *ngIf="errorMessage" class="error-message" >{{errorMessage}}</p>
+
+    <div class="button-group">
+      <button type="submit">Submit</button>
+      <!--<button type="reset" class="reset-btn">Reset</button>-->
+    </div>
+  </form>
+</div>
+

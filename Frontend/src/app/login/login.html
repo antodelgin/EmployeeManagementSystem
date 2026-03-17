@@ -1,0 +1,30 @@
+<!--<p>login works!</p>-->
+<form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+
+  <h2>Login</h2>
+
+  <label>
+    Email
+  </label>
+  <input type="email" formControlName="email" placeholder="Your email">
+  <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched || submitted)" style="color:crimson">
+    <small *ngIf="loginForm.controls['email'].errors && loginForm.controls['email'].errors['required']">Email is required.</small>
+    <small *ngIf="loginForm.controls['email'].errors && loginForm.controls['email'].errors['email']">Email must be valid.</small>
+  </div>
+  <label>
+    Password
+  </label>
+  <input type="password" formControlName="password" placeholder="Your password">
+  <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched || submitted)" style="color:crimson">
+    <small *ngIf="loginForm.controls['password'].errors && loginForm.controls['password'].errors['required']">Password is required.</small>
+    <small *ngIf="loginForm.controls['password'].errors && loginForm.controls['password'].errors['minlength']">Password should be alteast 6 characters.</small>
+  </div>
+
+  <button type="submit">Login</button>
+
+  <p *ngIf="error" style="color: crimson;"> Email / Password wrong</p>
+
+
+  <p>Didn't have an account? <a routerLink="/Auth/sign-up">Sign Up</a> here</p>
+
+</form>

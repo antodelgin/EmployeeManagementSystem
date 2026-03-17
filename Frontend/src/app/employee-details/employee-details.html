@@ -1,0 +1,39 @@
+
+
+<div class="employee-detail" *ngIf="employee$ | async as employee">
+  <!--<div class="employee-detail" *ngIf="employee$ | async as employee; else errorTemplate">-->
+  <h2 class="employee-name">{{ employee.firstName }} {{ employee.lastName }}</h2>
+  <div class="employee-info">
+    <p><span>Employee ID:</span> {{ employee.id }}</p>
+    <p><span>Email:</span> {{ employee.email }}</p>
+    <!--p><span>Department Id:</span> {{ employee.departmentId }}</p>-->
+    <p><span>Department Name :</span> {{ employee.departmentName }}</p>
+  </div>
+  <div class="button-group">
+    <button class="btn-edit" [routerLink]="['/Employee/update', employee.id]">Back</button>
+    <button class="btn-edit" [routerLink]="['/Employee/update', employee.id]">Edit</button>
+  </div>
+
+</div>
+
+
+<!--<ng-template #errorTemplate>-->
+  <!--<div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>-->
+
+<div *ngIf="errorMessage" class="error-container">
+  <div class="error-card">
+
+    <div class="error-icon">
+      ⚠
+    </div>
+    <h2>Not Found</h2>
+    <p>{{ errorMessage }}</p>
+    <button routerLink="/Employee/list" class="back-btn">
+      Back to Employee List
+    </button>
+
+  </div>
+</div>
+
