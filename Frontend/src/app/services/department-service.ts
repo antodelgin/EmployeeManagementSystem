@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface Department {
   id: number;
+  code: number;
   name: string;
 }
 
@@ -13,12 +14,16 @@ export interface Department {
   providedIn: 'root',
 })
 export class DepartmentService {
-  private apiUrl = 'http://localhost:5000/Department/list'; 
+  private apiUrl = 'http://localhost:5000/Department'; 
 
   constructor(private http: HttpClient) { }
 
+  createDepartment(department: Department): Observable<Department> {
+    return this.http.post<Department>(`${this.apiUrl}/create`, department);
+  }
+
   getDepartments(): Observable<Department[]> {
-    return this.http.get<Department[]>(this.apiUrl, { withCredentials: true });
+    return this.http.get<Department[]>(`${this.apiUrl}/list`);
   }
   
 }

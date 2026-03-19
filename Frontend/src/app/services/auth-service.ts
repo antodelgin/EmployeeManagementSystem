@@ -89,15 +89,62 @@ export class AuthService {
     return this.loggedIn.value;
   }
 
-  setLoggedIn(value: boolean) {
-    this.loggedIn.next(value);
+  getCurrentUser() {
+    return this.http.get<any>(`${this.baseUrl}/current-user`);
   }
+
+  //checkAuth() {
+  //  return this.http.get<any>(`${this.baseUrl}/current-user`, {
+  //    withCredentials: true
+  //  });
+  //}
+
+  //setLoggedIn(value: boolean) {
+  //  this.loggedIn.next(value);
+  //}
 
   getAuthStatus() {
     return this.loggedIn.value;
   }
   getRole(): string | null {
     return this.role.value;
+  }
+
+  initAuth() {
+    this.http.get<any>(`${this.baseUrl}/current-user`, {
+      withCredentials: true
+    }).subscribe({
+      next: (user) => {
+        this.loggedIn.next(true);
+        this.role.next(user.role);
+      },
+      error: () => {
+        this.loggedIn.next(false);
+        this.role.next(null);
+      }
+    });
+  }
+
+  //checkAuth() {
+  //  return this.http.get<any>(`${this.baseUrl}/current-user`, {
+  //    withCredentials: true
+  //  }).pipe(
+  //    tap((user) => {
+  //      this.loggedIn.next(true);
+  //      this.role.next(user.role);
+  //    })
+  //  );
+  //}
+
+  checkAuth() {
+    return this.http.get<any>(`${this.baseUrl}/current-user`, {
+      withCredentials: true
+    }).pipe(
+      tap((user) => {
+        this.loggedIn.next(true);
+        this.role.next(user.role);
+      })
+    );
   }
   //checkAuth() {
   //  this.http.get('http://localhost:5000/auth/check', { withCredentials: true })

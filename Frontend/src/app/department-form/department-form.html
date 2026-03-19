@@ -1,1 +1,27 @@
-<p>department-form works!</p>
+<!--<p>department-form works!</p>-->
+
+
+
+
+<div class="form-container">
+  <form [formGroup]="departmentCreationForm" class="" (ngSubmit)="onSubmit()">
+
+
+    <h2>Department Form</h2>
+
+    <label>Code</label>
+    <input type="number" formControlName="code" placeholder="Enter department code" />
+
+    <label>Name</label>
+    <input type="text" formControlName="name" placeholder="Enter department Name" />
+
+
+    <!--<p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>-->
+
+    <div class="button-group">
+      <button type="submit">Submit</button>
+      <!--<button type="reset" class="reset-btn">Reset</button>-->
+    </div>
+  </form>
+</div>
+

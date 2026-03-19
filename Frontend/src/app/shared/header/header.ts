@@ -50,7 +50,9 @@ export class Header implements OnInit {
   //  });
   //}
 
-  isLoggedIn$!: Observable<boolean>; 
+  isLoggedIn$!: Observable<boolean>;
+  currentUser$!: Observable<any>;
+
 
 
   constructor(public authService: AuthService, private router: Router, private http: HttpClient) { }
@@ -62,6 +64,11 @@ export class Header implements OnInit {
     this.isLoggedIn$ = this.authService.loggedIn$; 
 
   }
+
+  currentUser() {
+    this.currentUser$ = this.authService.getCurrentUser();
+  }
+
 
   logout() {
     this.authService.logout().subscribe(() => {

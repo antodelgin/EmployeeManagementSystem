@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './services/auth-service';
 
 //@Injectable({
@@ -41,18 +41,60 @@ export class AuthGuard implements CanActivate {
 
   //}
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
-  canActivate(): boolean {
+  //canActivate(): boolean {
 
-    if (this.auth.getAuthStatus()) {
-      return true;
-    }
+  //  if (this.auth.getAuthStatus()) {
+  //    return true;
+  //  }
 
-    this.router.navigate(['/Auth/validate']);
-    return false;
+  //  this.router.navigate(['/Auth/validate']);
+  //  return false;
+  //}
+
+  //canActivate(): Observable<boolean> {
+  //  return this.authService.checkAuth().pipe(
+  //    map(() => true),
+  //    catchError(() => {
+  //      this.router.navigate(['/Auth/validate']);
+  //      return of(false);
+  //    })
+  //  );
+  //}
+
+  //canActivate(): Observable<boolean> {
+  //  if (this.authService.isLoggedIn()) {
+  //    return of(true); // ✅ use cached state
+  //  }
+
+  //  // fallback if state not initialized yet
+  //  return this.authService.checkAuth().pipe(
+  //    map(() => true),
+  //    catchError(() => {
+  //      this.router.navigate(['/Auth/validate']);
+  //      return of(false);
+  //    })
+  //  );
+  //}
+  canActivate(): Observable<boolean> {
+    return this.authService.loggedIn$.pipe(
+      take(1), // take latest value
+      switchMap((isLoggedIn) => {
+        if (isLoggedIn) {
+          return of(true); 
+        }
+
+        return this.authService.checkAuth().pipe(
+          map(() => true),
+          catchError(() => {
+            this.router.navigate(['/Auth/validate']);
+            return of(false);
+          })
+        );
+      })
+    );
   }
-
 }
 //@Injectable({
 //  providedIn: 'root'

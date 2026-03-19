@@ -1,0 +1,20 @@
+<!--<p>user-details works!</p>-->
+
+
+<div *ngIf="currentUser$ | async as currentUser">
+
+  <h2>User Details</h2>
+
+  <div>
+    <p><span>EmployeeId: </span>{{currentUser.employeeId}}</p>
+    <p><span>Email: </span>{{currentUser.email}}</p>
+    <p><span>Role: </span>{{currentUser.role}}</p>
+    <p><span>isActive: </span>{{currentUser.isActive}}</p>
+  </div>
+
+
+  <div>
+    <button class="btn-edit" [routerLink]="['/Auth/user-update', currentUser.id]">Edit</button>
+  </div>
+
+</div>

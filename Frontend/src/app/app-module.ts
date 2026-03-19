@@ -19,7 +19,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { DepartmentForm } from './department-form/department-form';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth-interceptor';
+import { Sidebar } from './shared/sidebar/sidebar';
+import { DepartmentList } from './department-list/department-list';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { UserDetails } from './user-details/user-details';
 
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 
 @NgModule({
@@ -32,7 +38,10 @@ import { authInterceptor } from './auth-interceptor';
     Login,
     Signup,
     Header,
-    DepartmentForm
+    DepartmentForm,
+    Sidebar,
+    DepartmentList,
+    UserDetails
   ],
   imports: [
     BrowserModule,
@@ -41,7 +50,8 @@ import { authInterceptor } from './auth-interceptor';
     FormsModule,
     HttpClientModule, 
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    AgGridModule
 
   ],
   providers: [

@@ -8,6 +8,9 @@ import { Login } from './login/login';
 import { Signup } from './signup/signup';
 import { AuthGuard } from './auth-guard';
 import { RoleGuard } from './role-guard';
+import { DepartmentForm } from './department-form/department-form';
+import { DepartmentList } from './department-list/department-list';
+import { UserDetails } from './user-details/user-details';
 
 
 
@@ -21,10 +24,15 @@ const routes: Routes = [
     component: Signup
   },
   { path: 'home', component: Home },
+  {
+    path: 'Auth/current-user', component: UserDetails, canActivate: [AuthGuard]
+  },
   { path: 'Employee/list', component: EmployeeList, canActivate: [AuthGuard] },
   { path: 'Employee/create', component: EmployeeForm, canActivate: [AuthGuard, RoleGuard], data: { role: 'Admin' } },
   { path: 'Employee/update/:id', component: EmployeeForm, canActivate: [AuthGuard, RoleGuard], data: { role: 'Admin' } },
   { path: 'Employee/:id', component: EmployeeDetails, canActivate: [AuthGuard, RoleGuard], data: { role: 'Admin' } },
+  { path: 'Department/create', component: DepartmentForm, canActivate: [AuthGuard, RoleGuard], data: { role: 'Admin' } },
+  { path: 'Department/list', component: DepartmentList, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

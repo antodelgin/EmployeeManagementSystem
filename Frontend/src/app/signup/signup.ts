@@ -17,11 +17,19 @@ export class Signup {
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
 
+    //this.signUpForm = this.fb.group({
+    //  username: [''],
+    //  email: ['', [Validators.required, Validators.email]],
+    //  password: ['', [Validators.required, Validators.minLength(6)]],
+    //  role: ['', Validators.required]
+    //});
+
     this.signUpForm = this.fb.group({
-      username: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      employeeId: ['', Validators.required],
+      isActive: [true]                         
     });
   }
 

@@ -1,0 +1,40 @@
+<!--<div class="list-container" *ngIf="departments$ | async as departments">
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let department of departments; let i = index ">
+        <td>{{ i+1 }}</td>
+        <td>{{department.code}}</td>
+        <td>{{department.name}}</td>
+        <td>-->
+          <!--<button [routerLink]="['/Department', department.id]">Edit</button>-->
+          <!--<button >Edit</button>
+        </td>
+
+      </tr>
+      <tr *ngIf="departments.length === 0 ">
+        <td colspan="4">No departments found</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>-->
+
+<!--<ag-grid-angular class="ag-theme-alpine"
+                 style="width: 100%; height: 400px;"
+                 [rowData]="rowData"
+                 [columnDefs]="columnDefs">
+</ag-grid-angular>-->
+<ag-grid-angular class="ag-theme-alpine"
+                 theme="legacy"
+                 style="width: 100%; height: 400px;"
+                 [rowData]="rowData$ | async"
+                 [columnDefs]="columnDefs">
+</ag-grid-angular>

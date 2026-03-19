@@ -1,0 +1,33 @@
+<!--<p>sidebar works!</p>-->
+<aside class="sidebar">
+
+  <!--<h2 class="logo">Employee Management</h2>-->
+
+  <nav class="nav-links">
+
+    <a *ngIf="(authService.role$ | async) === 'Admin'"
+       [routerLink]="['/Employee/create']"
+       routerLinkActive="active">
+      Add Employee
+    </a>
+
+    <a *ngIf="(authService.role$ | async) === 'Admin'"
+       [routerLink]="['/Department/create']"
+       routerLinkActive="active">
+      Add Department
+    </a>
+
+    <a *ngIf="isLoggedIn$ | async"
+       [routerLink]="['/Employee/list']"
+       routerLinkActive="active">
+      Employee List
+    </a>
+
+    <a *ngIf="isLoggedIn$ | async"
+       [routerLink]="['/Department/list']"
+       routerLinkActive="active">
+      Department List
+    </a>
+  </nav>
+
+</aside>
