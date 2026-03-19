@@ -23,5 +23,8 @@ namespace Backend.Model
         public int DepartmentId { get; set; }
 
         public Department Department { get; set; }
+
+        public User User { get; set; }
+
     }
 }

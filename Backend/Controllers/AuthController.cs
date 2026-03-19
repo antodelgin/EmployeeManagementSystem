@@ -3,6 +3,7 @@ using Backend.Model;
 using Backend.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
@@ -53,6 +54,7 @@ namespace Backend.Controllers
 
             var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, dbUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, dbUser.Email),
                     new Claim(ClaimTypes.Role, dbUser.Role.ToString())
                 };
@@ -90,39 +92,96 @@ namespace Backend.Controllers
         }
 
 
-    //[HttpPost("login")]
-    //public IActionResult LoginValidate([FromBody] LoginDto dto )
-    //{
-    //    //if (user.Email == "anto@test.com" && user.Password == "anto04")
-    //    //    return Ok(new { message = "Login successful"});
-    //    //return Unauthorized(new { message = "Invalid credentials" });
-    //    Console.WriteLine($"Email: {dto?.Email}");
-    //    Console.WriteLine($"Password: {dto?.Password}");
+        //[HttpPost("login")]
+        //public IActionResult LoginValidate([FromBody] LoginDto dto )
+        //{
+        //    //if (user.Email == "anto@test.com" && user.Password == "anto04")
+        //    //    return Ok(new { message = "Login successful"});
+        //    //return Unauthorized(new { message = "Invalid credentials" });
+        //    Console.WriteLine($"Email: {dto?.Email}");
+        //    Console.WriteLine($"Password: {dto?.Password}");
 
-    //    //var dbUser = authService.ValidateUser(user.Email, user.Password);
-    //    var dbUser = await authService.ValidateUser(dto.Email, dto.Password);
-    //    //Console.WriteLine(dbUser);
+        //    //var dbUser = authService.ValidateUser(user.Email, user.Password);
+        //    var dbUser = await authService.ValidateUser(dto.Email, dto.Password);
+        //    //Console.WriteLine(dbUser);
 
-    //    if (dbUser == null)
-    //    {
-    //        return Unauthorized(new { message = "Invalid credentials" });
-    //    }
-    //    else
-    //    {
-    //        return Ok(new { message = "Login successful" });
-    //    }
-    //}
+        //    if (dbUser == null)
+        //    {
+        //        return Unauthorized(new { message = "Invalid credentials" });
+        //    }
+        //    else
+        //    {
+        //        return Ok(new { message = "Login successful" });
+        //    }
+        //}
 
-    [HttpPost("sign-up")]
-        public IActionResult SignUp([FromBody] User user)
+        [HttpPost("sign-up")]
+        public IActionResult SignUp([FromBody] SignUpDto dto)
         {
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
+            var user = new User
+            {
+                Email = dto.Email,
+                Password = dto.Password,
+                Role = Enum.Parse<UserRole>(dto.Role, true),
+                EmployeeId = dto.EmployeeId,
+                IsActive = dto.IsActive
+            };
             var result = authService.Create(user);
             return Ok(result);
 
         }
 
+        [Authorize]
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            if (User?.Identity?.IsAuthenticated != true) return Unauthorized();
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null) return Unauthorized();
+
+            var user = await authService.GetUserById(int.Parse(userId));
+
+            if (user == null) return NotFound();
+
+            return Ok(new
+            {
+                id = user.Id,
+                email = user.Email,
+                role = user.Role.ToString(),
+                employeeId = user.EmployeeId,
+                isActive = user.IsActive
+            });
+
+
+        }
+
+
+
+        [HttpGet("current-users")]
+        public async Task<IActionResult> GetCurrentUsers()
+        {
+            if (User?.Identity?.IsAuthenticated != true)
+                return Unauthorized();
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await authService.GetUserById(int.Parse(userId));
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
     }
-
-
-
 }

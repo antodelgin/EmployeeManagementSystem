@@ -83,7 +83,7 @@ namespace Backend.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("list")]
         public IActionResult GetEmployees([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {

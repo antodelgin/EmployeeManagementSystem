@@ -7,8 +7,8 @@ namespace Backend.Model
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string Username { get; set; }
+        //[Required]
+        //public string Username { get; set; }
 
         [Required]
         public string Email { get; set; }
@@ -19,6 +19,13 @@ namespace Backend.Model
         [Required]
         public UserRole Role { get; set; }
 
+        [Required]
+        public int EmployeeId { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; }
+
+        public Employee? Employee { get; set; }
 
         //public List<Employee> Employees { get; set; }
     }

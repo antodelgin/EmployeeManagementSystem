@@ -43,5 +43,10 @@ namespace Backend.Service
             appContext.SaveChanges();
             return user;
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await appContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
     }
 }

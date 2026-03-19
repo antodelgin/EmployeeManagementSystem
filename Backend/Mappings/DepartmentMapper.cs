@@ -11,7 +11,8 @@ namespace Backend.Mappings
         return new DepartmentDto
         {
             Id = department.Id,
-            Name = department.Name
+            Name = department.Name,
+            Code = department.Code
         };
     }
 
@@ -19,7 +20,8 @@ namespace Backend.Mappings
     {
         return new Department
         {
-            Name = dto.Name
+            Name = dto.Name,
+            Code = dto.Code
         };
     }
 }

@@ -3,6 +3,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260318080708_UpdateDepartment")]
+    partial class UpdateDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,12 +86,6 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -97,10 +94,11 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -116,26 +114,9 @@ namespace Backend.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("Backend.Model.User", b =>
-                {
-                    b.HasOne("Backend.Model.Employee", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("Backend.Model.User", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Backend.Model.Department", b =>
                 {
                     b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("Backend.Model.Employee", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
