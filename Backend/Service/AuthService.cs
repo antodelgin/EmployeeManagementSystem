@@ -1,6 +1,10 @@
 using Backend.Dto;
 using Backend.Mappings;
 using Backend.Model;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Backend.Exceptions;
+
+
 //using Backend.Exceptions;
 //using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -17,19 +21,6 @@ namespace Backend.Service
             appContext = context;
         }
 
-        //public async Task<LoginDto?> ValidateUser(string email, string password )
-        //{
-        //    var user = await appContext.Users
-        //        .FirstOrDefault(u => u.Email == email && u.Password == password );
-
-        //    if (user == null)
-        //        return null;
-
-        //    return new LoginDto
-        //    {
-        //        Email = user.Email
-        //    };
-        //}
 
         public async Task<User?> ValidateUser(string email, string password)
         {
@@ -37,10 +28,28 @@ namespace Backend.Service
                 .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
 
-        public User Create(User user)
+        public async Task<User> Create(User user)
         {
+            var employee = await appContext.Employees
+                .FirstOrDefaultAsync(e => e.Id == user.EmployeeId);
+
+            if (employee == null)
+                throw new ApplicationException("Employee not found");
+
+            if (employee.Email != user.Email)
+                throw new ApplicationException("Employee email does not match");
+
+            var existingUser = await appContext.Users
+                .AnyAsync(u => u.EmployeeId == user.EmployeeId);
+
+            if (existingUser) throw new EmailAlreadyExistsException();
+                //throw new ApplicationException("User already exists for this employee");
+
+            user.Employee = employee;
+
             appContext.Users.Add(user);
-            appContext.SaveChanges();
+            await appContext.SaveChangesAsync();
+
             return user;
         }
 

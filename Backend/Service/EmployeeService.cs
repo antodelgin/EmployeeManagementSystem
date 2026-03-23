@@ -11,11 +11,6 @@ namespace Backend.Service
 {
     public class EmployeeService
     {
-        //private readonly AppDbContext appDbContext;
-
-        //public EmployeeService(AppDbContext appDbContext) {
-        //    this.appDbContext = appDbContext;
-        //}
         private EmployeeRepository employeeRepository;
 
         public EmployeeService(EmployeeRepository employeeRepository)
@@ -23,29 +18,82 @@ namespace Backend.Service
             this.employeeRepository = employeeRepository;
         }
 
-        //public List<Employee> FindEmployeeInSameDepartment(int departmentId, int pageNumber, int pageSize)
-        //{
-        //    var emp = this.employeeRepository.FindEmployeeInSameDpt(departmentId);
+        private PagedResultDto<TDto> BuildPagedResult<TEntity, TDto>(
+            List<TEntity> entities,
+            int totalRecords,
+            int pageNumber,
+            int pageSize,
+            Func<TEntity, TDto> mapFunc)
+        {
+            return new PagedResultDto<TDto>
+            {
+                Data = entities.Select(mapFunc).ToList(),
+                TotalRecords = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+            };
+        }
 
-        //    //if (emp == null) return null;
+        public PagedResultDto<EmployeeDto> FindEmployeeInSameDepartment(int departmentId, int pageNumber, int pageSize)
+        {
+            var (employees, totalRecords) =
+                employeeRepository.FindEmployeeInSameDpt(departmentId, pageNumber, pageSize);
 
-        //    return emp;
+            return BuildPagedResult(
+                employees,
+                totalRecords,
+                pageNumber,
+                pageSize,
+                EmployeeMapper.EntityToEmployeeDto
+            );
+        }
 
-        //}
+        public PagedResultDto<EmployeeDto> SearchEmployees(string name, int departmentId, int pageNumber, int pageSize)
+        {
+            var (employees, totalRecords) =
+                employeeRepository.SearchEmployeesByName(name, departmentId, pageNumber, pageSize);
+
+            return BuildPagedResult(
+                employees,
+                totalRecords,
+                pageNumber,
+                pageSize,
+                EmployeeMapper.EntityToEmployeeDto
+            );
+        }
+
+        public PagedResultDto<EmployeeDto> FindAllEmployees(int pageNumber, int pageSize)
+        {
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+            pageSize = pageSize < 1 ? 10 : pageSize;
+
+            var (employees, totalRecords) =
+                employeeRepository.FindAllEmployees(pageNumber, pageSize);
+
+            return BuildPagedResult(
+                employees,
+                totalRecords,
+                pageNumber,
+                pageSize,
+                EmployeeMapper.EntityToEmployeeDto
+            );
+        }
 
         //public object FindEmployeeInSameDepartment(int departmentId, int pageNumber, int pageSize)
         //{
-        //    var query = appDbContext.Employees
-        //        .Where(e => e.DepartmentId == departmentId);
+        //    var (employees, totalRecords) = employeeRepository.FindEmployeeInSameDpt(departmentId, pageNumber, pageSize);
 
-        //    var totalCount = query.Count();
+        //    int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-        //    var data = query
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToList();
-
-        //    var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        //    var data = employees.Select(e => new
+        //    {
+        //        id = e.Id,
+        //        firstName = e.FirstName,
+        //        lastName = e.LastName,
+        //        email = e.Email,
+        //        departmentName = e.Department.Name
+        //    });
 
         //    return new
         //    {
@@ -54,77 +102,38 @@ namespace Backend.Service
         //    };
         //}
 
-        public object FindEmployeeInSameDepartment(int departmentId, int pageNumber, int pageSize)
-        {
-            var (employees, totalRecords) = employeeRepository.FindEmployeeInSameDpt(departmentId, pageNumber, pageSize);
 
-            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-            var data = employees.Select(e => new
-            {
-                id = e.Id,
-                firstName = e.FirstName,
-                lastName = e.LastName,
-                email = e.Email,
-                departmentName = e.Department.Name
-            });
-
-            return new
-            {
-                data,
-                totalPages
-            };
-        }
-
-        //public List<Employee> SearchEmployees(string name)
+        //public object SearchEmployees(string name, int departmentId, int pageNumber, int pageSize)
         //{
+        //    var (employees, totalRecords) =
+        //        employeeRepository.SearchEmployeesByName(name, departmentId, pageNumber, pageSize);
 
-        //    var employee = this.employeeRepository.SearchEmployeesByName(name);
+        //    int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-        //    return employee;
+        //    var data = employees.Select(e => new
+        //    {
+        //        id = e.Id,
+        //        firstName = e.FirstName,
+        //        lastName = e.LastName,
+        //        email = e.Email,
+        //        departmentName = e.Department.Name
+        //    });
 
+        //    return new
+        //    {
+        //        data,
+        //        totalPages
+        //    };
         //}
-
-        public object SearchEmployees(string name, int departmentId, int pageNumber, int pageSize)
-        {
-            var (employees, totalRecords) =
-                employeeRepository.SearchEmployeesByName(name, departmentId, pageNumber, pageSize);
-
-            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-            var data = employees.Select(e => new
-            {
-                id = e.Id,
-                firstName = e.FirstName,
-                lastName = e.LastName,
-                email = e.Email,
-                departmentName = e.Department.Name
-            });
-
-            return new
-            {
-                data,
-                totalPages
-            };
-        }
 
         public EmployeeDto CreateEmployee(CreateEmployeeDto dto)
         {
             var employee = EmployeeMapper.CreateEmployeeDtotoEntity(dto);
 
-            //bool emailExists = appDbContext.Employees.Any(e => e.Email == employee.Email);
-            //if (emailExists) return null;
-            //this.employeeRepository()
             if (this.employeeRepository.EmailExists(employee.Email))
                 throw new EmailAlreadyExistsException();
 
-            //if (emailExists)
-            //    throw new EmailAlreadyExistsException();
-
             this.employeeRepository.AddEmployee(employee);
-
-            //appDbContext.Employees.Add(employee);
-            //appDbContext.SaveChanges();
 
             var employeeDto = EmployeeMapper.EntityToEmployeeDto(employee);
             Console.WriteLine(employeeDto);
@@ -134,12 +143,6 @@ namespace Backend.Service
 
         public EmployeeDto FindEmployeeByID(int id)
         {
-            //var employee = appDbContext.Employees.Find(id);
-            //var employee = appDbContext.Employees
-            //    .Include(e => e.Department)
-            //    .FirstOrDefault(e => e.Id == id);
-
-
             var employee = this.employeeRepository.FindEmployeeById(id);
 
             if (employee == null)
@@ -149,55 +152,39 @@ namespace Backend.Service
         }
 
 
-        public PagedResultDto<EmployeeDto> FindAllEmployees(int pageNumber, int pageSize)
-        {
-            if (pageNumber < 1) pageNumber = 1;
-            if (pageSize < 1) pageSize = 10;
+        //public PagedResultDto<EmployeeDto> FindAllEmployees(int pageNumber, int pageSize)
+        //{
+        //    if (pageNumber < 1) pageNumber = 1;
+        //    if (pageSize < 1) pageSize = 10;
 
-            //var query = appDbContext.Employees.AsQueryable();
-            //var query = appDbContext.Employees.Include(e => e.Department).AsQueryable();
+        //    var result = this.employeeRepository.FindAllEmployees(pageNumber, pageSize);
+        //    var employees = result.Item1;
+        //    var totalRecords = result.Item2;
 
-            //int totalRecords = query.Count();
+        //    var employeeDtos = employees
+        //        .Select(e => EmployeeMapper.EntityToEmployeeDto(e))
+        //        .ToList();
 
-            //var employees = query.OrderByDescending(e => e.Id)    
-            //    .Skip((pageNumber - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToList();
+        //    var emp = new PagedResultDto<EmployeeDto>
+        //    {
+        //        Data = employeeDtos,
+        //        TotalRecords = totalRecords,
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+        //    };
 
-            var result = this.employeeRepository.FindAllEmployees(pageNumber, pageSize);
-            var employees = result.Item1;
-            var totalRecords = result.Item2;
-
-            var employeeDtos = employees
-                .Select(e => EmployeeMapper.EntityToEmployeeDto(e))
-                .ToList();
-
-            var emp = new PagedResultDto<EmployeeDto>
-            {
-                Data = employeeDtos,
-                TotalRecords = totalRecords,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
-            };
-
-            //Console.WriteLine(emp);
-
-            return emp;
-        }
+        //    return emp;
+        //}
 
 
         public EmployeeDto UpdateEmployee(int id, CreateEmployeeDto dto)
         {
-            //var existingData = appDbContext.Employees.Find(id);
-
             var existingData = this.employeeRepository.FindEmployeeById(id);
 
             if (existingData == null)
             {
-                //Console.WriteLine("akjfkjfjoi");
                 throw new EmployeeNotFoundException(id);
-
             }
 
             existingData.FirstName = dto.FirstName;
@@ -205,13 +192,8 @@ namespace Backend.Service
             existingData.Email = dto.Email;
             existingData.DepartmentId = dto.DepartmentId;
 
-            //appDbContext.SaveChanges();
             this.employeeRepository.Save();
 
-            //var updatedData = appDbContext.Employees.Find(id);
-            //var updatedData = appDbContext.Employees
-            //    .Include(e => e.Department)
-            //    .FirstOrDefault(e => e.Id == id);
             var updatedData = this.employeeRepository.FindEmployeeById(id);
 
             return EmployeeMapper.EntityToEmployeeDto(updatedData);;
@@ -220,15 +202,12 @@ namespace Backend.Service
 
         public bool DeleteEmployee(int id)
         {
-            //var employee = appDbContext.Employees.Find(id);
             var employee = this.employeeRepository.FindEmployeeById(id);
 
 
             if (employee == null)
                 return false;
 
-            //appDbContext.Employees.Remove(employee);
-            //appDbContext.SaveChanges();
             this.employeeRepository.DeleteEmployee(employee);
 
             return true;

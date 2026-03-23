@@ -1,8 +1,8 @@
 namespace Backend.Dto
 {
-    public class PagedResultDto<EmployeeDto>
+    public class PagedResultDto<T>
     {
-        public List<EmployeeDto> Data { get; set; }
+        public List<T> Data { get; set; }
 
         public int TotalRecords { get; set; }
 
@@ -12,8 +12,5 @@ namespace Backend.Dto
 
         public int TotalPages { get; set; }
 
-
     }
-
-
 }

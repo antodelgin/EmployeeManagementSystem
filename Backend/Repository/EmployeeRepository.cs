@@ -35,7 +35,7 @@ namespace Backend.Repository
 
         public List<Employee> FindEmployeeInSameDpt(int departmentId)
         {
-            var emp = appDbContext.Employees.Where(e => e.DepartmentId == departmentId).ToList();
+            var emp = appDbContext.Employees.Where(e => e.DepartmentId == departmentId).AsNoTracking().ToList();
             return emp;
         }
 
@@ -77,7 +77,7 @@ namespace Backend.Repository
             int totalRecords = query.Count();
 
             var employees = query
-                .OrderByDescending(e => e.Id)
+                .OrderBy(e => e.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
@@ -110,12 +110,39 @@ namespace Backend.Repository
         }
 
 
+        //public (List<Employee>, int) SearchEmployeesByName(string name, int departmentId, int pageNumber, int pageSize)
+        //{
+        //    var query = appDbContext.Employees
+        //        .Include(e => e.Department)
+        //        .Where(e => (e.FirstName.Contains(name) || e.LastName.Contains(name)) && e.DepartmentId == departmentId)
+        //        .AsQueryable();
+
+        //    int totalRecords = query.Count();
+
+        //    var employees = query
+        //        .OrderByDescending(e => e.Id)
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToList();
+
+        //    return (employees, totalRecords);
+        //}
+
         public (List<Employee>, int) SearchEmployeesByName(string name, int departmentId, int pageNumber, int pageSize)
         {
             var query = appDbContext.Employees
                 .Include(e => e.Department)
-                .Where(e => (e.FirstName.Contains(name) || e.LastName.Contains(name)) && e.DepartmentId == departmentId)
                 .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
+            }
+
+            if (departmentId > 0)
+            {
+                query = query.Where(e => e.DepartmentId == departmentId);
+            }
 
             int totalRecords = query.Count();
 

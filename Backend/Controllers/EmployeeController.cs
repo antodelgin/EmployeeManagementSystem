@@ -19,22 +19,6 @@ namespace Backend.Controllers
             this.employeeService = employeeService;
         }
 
-
-        //[HttpGet("department/{id}")]
-        //public IActionResult Practise(int id,
-        //    [FromQuery] int pageNumber = 1,
-        //    [FromQuery] int pageSize = 10)
-        //{
-        //    var employees = employeeService.FindEmployeeInSameDepartment(id, pageNumber, pageSize);
-
-        //    return Ok(employees);
-        //}
-        //    var emp = employeeService.FindEmployeeInSameDepartment(id);
-
-        //    return Ok(emp);
-        //}
-
-
         [HttpGet("department/{id}")]
         public IActionResult FindEmployeeInDepartment(
         int id,
@@ -45,13 +29,6 @@ namespace Backend.Controllers
             return Ok(employees);
         }
 
-        //[HttpGet("search")]
-        //public IActionResult SearchEmployees(string name)
-        //{
-        //    var employees = employeeService.SearchEmployees(name);
-        //    return Ok(employees);
-        //}
-
         [HttpGet("search")]
         public IActionResult SearchEmployees(
             string name,
@@ -60,6 +37,8 @@ namespace Backend.Controllers
             [FromQuery] int pageSize = 10)
         {
             var employees = employeeService.SearchEmployees(name, departmentId, pageNumber, pageSize);
+
+            Console.WriteLine(employees);
             return Ok(employees);
         }
 
@@ -68,8 +47,6 @@ namespace Backend.Controllers
         public IActionResult AddEmployee([FromBody] CreateEmployeeDto dto)
         {
             var emp = employeeService.CreateEmployee(dto);
-            //if (emp == null)
-            //    return BadRequest(new { message = "Email already exists" });
 
             return Ok(emp);
         }
@@ -96,9 +73,6 @@ namespace Backend.Controllers
         {
             var updatedEmp = employeeService.UpdateEmployee(id, dto);
 
-            //if (updatedEmp == null)
-            //    return NotFound($"Employee with id {id} not found");
-
             return Ok(new
             {
                 message = $"Updated employee id: {id}",
@@ -112,7 +86,6 @@ namespace Backend.Controllers
         public IActionResult DeleteEmployee(int id)
         {
             var deleted = employeeService.DeleteEmployee(id);
-            //Console.WriteLine("ksdfj");
 
             if (!deleted) return NotFound($"employee with id: {id} not found");
 
