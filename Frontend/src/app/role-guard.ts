@@ -1,12 +1,3 @@
-//import { CanActivateFn } from '@angular/router';
-
-//export const roleGuard: CanActivateFn = (route, state) => {
-//  return true;
-//};
-
-
-
-
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';

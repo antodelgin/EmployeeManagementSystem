@@ -1,14 +1,6 @@
 <header class="app-header">
   <h1 class="logo">Employee Management</h1>
 
-  <!--<button *ngIf="(isLoggedIn$ | async)" (click)="currentUser()">👤</button>-->
-
-  <!--<a *ngIf="isLoggedIn$ | async"
-     [routerLink]="['/Auth/current-user']"
-     routerLinkActive="active">
-    👤
-  </a>-->
-
   <button *ngIf="(isLoggedIn$ | async)" [routerLink]="['/Auth/current-user']">
     👤
   </button>

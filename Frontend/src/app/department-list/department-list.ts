@@ -13,9 +13,6 @@ import { ColDef } from 'ag-grid-community';
 })
 export class DepartmentList implements OnInit {
 
-
-  //departments$!: Observable<Department[]>;
-
   //rowData: Department[] = [];
   rowData$!: Observable<Department[]>;
 
@@ -50,22 +47,9 @@ export class DepartmentList implements OnInit {
 
   constructor(private departmentService: DepartmentService, public authService: AuthService) { }
 
-  //ngOnInit(): void {
-  //  //this.departments$ = this.departmentService.getDepartments();
-  //  //this.departmentService.getDepartments().subscribe(data => {
-  //  //  this.rowData = data;
-  //  //});
-  //  //this.departmentService.getDepartments().subscribe(data => {
-  //  //  this.rowData = [...data]; // triggers change detection properly
-  //  //});
-
-
-  //}
 
   ngOnInit(): void {
     this.rowData$ = this.departmentService.getDepartments();
   }
-
-
 
 }

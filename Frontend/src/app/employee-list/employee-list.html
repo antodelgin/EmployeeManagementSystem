@@ -1,22 +1,48 @@
 
 
-<div class="filter">
+<!--<div class="filter">
   <label>Filter by Department:</label>
   <select (change)="onFilterChange($any($event.target).value)">
     <option value="">All Departments</option>
-    <option value="1">IT</option>
-    <option value="2">Marketing</option>
+    <option value="1">HR</option>
+    <option value="2">IT</option>
     <option value="3">Finance</option>
-    <option value="4">HR</option>
+    <option value="4">Marketing</option>
+    <option value="10">Sales</option>
   </select>
 
   <button (click)="clearFilter()">Reset</button>
+</div>-->
+
+<!--<input type="text" [(ngModel)]="employeeName" placeholder="Search employee" />-->
+<!--<input type="text" [(ngModel)]="employeeName" (ngModelChange)="onSearchChange($event)" placeholder="Search employee" />-->
+<!--<button (click)="searchEmployee()">Search</button>-->
+
+<div class="toolbar">
+
+  <div class="search-group">
+    <input type="text"
+           [(ngModel)]="employeeName"
+           (ngModelChange)="onSearchChange($event)"
+           placeholder="Search employee..." />
+  </div>
+
+  <label>Department</label>
+  <div class="filter-group">
+    <!--<label>Department</label>-->
+    <select (change)="onFilterChange($any($event.target).value)">
+      <option value="">All</option>
+      <option value="1">HR</option>
+      <option value="2">IT</option>
+      <option value="3">Finance</option>
+      <option value="4">Marketing</option>
+      <option value="10">Sales</option>
+    </select>
+  </div>
+
+  <button class="reset-btn" (click)="clearFilter()">Reset</button>
+
 </div>
-
-<input type="text" [(ngModel)]="employeeName" placeholder="Search employee" />
-<button (click)="searchEmployee()">Search</button>
-
-
 <div class="list-container" *ngIf="employees$ | async as employees">
 
   <table>

@@ -12,18 +12,6 @@ export class App {
 
   constructor(private authService: AuthService) { }
 
-  //ngOnInit() {
-  //  this.authService.checkAuth().subscribe({
-  //    next: (user) => {
-  //      this.authService['loggedIn'].next(true);   // restore login
-  //      this.authService['role'].next(user.role);
-  //    },
-  //    error: () => {
-  //      this.authService['loggedIn'].next(false);
-  //    }
-  //  });
-  //}
-
   ngOnInit() {
     this.authService.initAuth(); 
   }

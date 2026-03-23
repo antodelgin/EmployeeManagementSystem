@@ -26,7 +26,6 @@ export class EmployeeDetails implements OnInit  {
             if (err.error.message) {
 
               this.errorMessage = err.error.message;
-              //console.log(this.errorMessage + err.error.statusCode);
             } else {
               this.errorMessage = 'An unexpected error occurred.';
             }

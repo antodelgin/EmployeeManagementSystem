@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 import { Employee, EmployeeService } from '../services/employee-service';
 //import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
@@ -28,14 +28,21 @@ export class EmployeeList implements OnInit {
   constructor(private employeeService: EmployeeService, public authService: AuthService) { }
 
   ngOnInit(): void {
+
+    const debouncedSearch$ = this.search$.pipe(
+      map(value => value.trim()),
+      debounceTime(300),
+      distinctUntilChanged()
+    );
+
     this.employees$ = combineLatest([
       this.refresh$,
       this.departmentFilter$,
-      this.search$
+      debouncedSearch$
     ]).pipe(
       switchMap(([_, departmentId, name]) => {
 
-        if (name) {
+        if (name.length > 0) {
           return this.employeeService.searchEmployeeByName(
             name,
             departmentId ?? 0,
@@ -64,47 +71,14 @@ export class EmployeeList implements OnInit {
     );
   }
 
-  //ngOnInit(): void {
-  //  this.employees$ = combineLatest([this.refresh$, this.departmentFilter$]).pipe(
-  //    switchMap(([_, departmentId]) => {
-
-  //      if (departmentId) {
-  //        return this.employeeService.filterEmployeeByDepartmentId(
-  //          departmentId,
-  //          this.pageNumber,
-  //          this.pageSize
-  //        );
-  //      }
-
-  //      return this.employeeService.getAllEmployee(
-  //        this.pageNumber,
-  //        this.pageSize
-  //      );
-
-  //    }),
-  //    map((response: any) => {
-  //      this.totalPages = response.totalPages;
-  //      return response.data;
-  //    })
-  //  );
-  //}
-
-  //searchEmployee(name: string) {
-  //  this.employeeService.searchEmployeeByName(name);
-  //}
-
-  //employeeName: string = '';
-  //employees: any[] = [];
-
   //searchEmployee() {
-  //  this.employeeService.searchEmployeeByName(this.employeeName);
-  //    //.subscribe(data => {
-  //    //  this.employeeName = data;
-  //    //});
+  //  this.pageNumber = 1;
+  //  this.search$.next(this.employeeName);
   //}
-  searchEmployee() {
+
+  onSearchChange(value: string) {
     this.pageNumber = 1;
-    this.search$.next(this.employeeName);
+    this.search$.next(value);
   }
 
   deleteEmployee(id: number) {

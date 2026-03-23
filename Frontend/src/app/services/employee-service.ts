@@ -51,16 +51,6 @@ export class EmployeeService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   };
 
-  //getAllEmployee(pageNumber: number, pageSize: number) {
-  //  return this.http.get<any>(
-  //    `${this.apiUrl}/list?pageNumber=${pageNumber}&pageSize=${pageSize}`
-  //  );
-  //}
-
-  //getAllEmployee(): Observable<Employee[]> {
-
-  //  return this.http.get<Employee[]>(`${this.apiUrl}/list`);
-  //};
 
   getAllEmployee(pageNumber: number, pageSize: number): Observable<PagedResult<Employee>> {
     return this.http.get<PagedResult<Employee>>(
@@ -75,14 +65,8 @@ export class EmployeeService {
 
 
   deleteEmployeeById(id: number): Observable<any> {
-    //console.log('hi...');
     return this.http.delete<any>(`${this.apiUrl}/delete/${id}`);
   }
-
-
-  //filterEmployeeByDepartmentId(id:number) {
-  //  return this.http.get<any>(`${this.apiUrl}/department/${id}`);
-  //}
 
   filterEmployeeByDepartmentId(id: number, pageNumber: number, pageSize: number) {
     return this.http.get<any>(
@@ -90,11 +74,6 @@ export class EmployeeService {
     );
   }
 
-  //searchEmployeeByName(name: string) {
-  //  return this.http.get<any>(
-  //    `${this.apiUrl}/search?name=${name}`
-  //  );
-  //}
   searchEmployeeByName(name: string, departmentId: number, pageNumber: number, pageSize: number) {
     return this.http.get<any>(
       `${this.apiUrl}/search?name=${name}&departmentId=${departmentId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
@@ -103,7 +82,6 @@ export class EmployeeService {
 
   logout() {
 
-    //this.isLoggedIn = false;
     return this.http.post<any>(
       'http://localhost:5000/auth/logout',
       {},

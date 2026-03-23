@@ -31,6 +31,7 @@ export class EmployeeForm {
       }
     )
   }
+
   ngOnInit(): void{
 
     this.departmentService.getDepartments().subscribe({

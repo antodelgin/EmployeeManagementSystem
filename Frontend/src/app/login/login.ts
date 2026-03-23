@@ -29,23 +29,6 @@ export class Login {
     this.error = false;
 
     const formData = this.loginForm.value;
-    //console.log(formData);
-    //const apiUrl = 'http://localhost:5000/auth/validate';
-
-    //this.http.post(apiUrl, formData, { withCredentials: true }).subscribe({
-    ////this.http.post(apiUrl, formData).subscribe({
-    //  next: (response) => {
-    //    console.log('Login successful', response);
-    //    this.router.navigate(['/Employee/list']);
-
-    //  },
-    //  error: (err) => {
-    //    console.error('Login failed', err);
-    //    this.error = true;
-
-    //    this.cdr.detectChanges();
-    //  }
-    //})
 
     this.authService.login(formData).subscribe({
       next: () => {
@@ -61,22 +44,4 @@ export class Login {
     });
   }
 
-//  onSubmit() {
-//    this.submitted = true;
-//    this.error = false;
-
-//    const formData = this.loginForm.value;
-
-//    this.authService.login(formData).subscribe({
-//      next: (response) => {
-//        console.log('Login successful', response);
-//\        this.router.navigate(['/Employee/list']);
-//      },
-//      error: (err) => {
-//        console.error('Login failed', err);
-//        this.error = true;
-//        this.cdr.detectChanges();
-//      },
-//    });
-  //}
 }

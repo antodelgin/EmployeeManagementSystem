@@ -12,51 +12,8 @@ export interface LoginDto {
   providedIn: 'root',
 })
 export class AuthService {
-  //http = inject(HttpClient)
-
-  //apiUrl = 'http://localhost:5000/auth/validate';
-
-  //login(formData: LoginDto): Observable<any> {
-  //  return this.http.post(`${this.apiUrl}/validate`, formData, { withCredentials: true });
-  //}
-
-  //createEmployee(employee: CreateEmployee): Observable<Employee> {
-  //  return this.http.post<Employee>(`${this.apiUrl}/create`, employee, { withCredentials: true });
-
-  //}
-
-  //private http = inject(HttpClient);
-  //private baseUrl = 'http://localhost:5000/auth';
-
-  //// Central auth state
-  //private authState = new BehaviorSubject<boolean>(false);
-  //authState$ = this.authState.asObservable();
-
-  //login(formData: LoginDto): Observable<any> {
-  //  return this.http.post<any>(`${this.baseUrl}/validate`, formData, { withCredentials: true }).pipe(
-  //    tap(() => this.authState.next(true))
-  //  );
-  //}
-
-  //checkAuth(): void {
-  //  this.http.get<any>(`${this.baseUrl}/check`, { withCredentials: true }).pipe(
-  //    tap(() => this.authState.next(true)),
-  //    catchError(() => {
-  //      this.authState.next(false);
-  //      return of(null);
-  //    })
-  //  ).subscribe();
-  //}
-
-  //logout(): Observable<any> {
-  //  return this.http.post<any>(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
-  //    tap(() => this.authState.next(false))
-  //  );
-  //}
+  
   private baseUrl = 'http://localhost:5000/auth';
-
-  //private authState = new BehaviorSubject<boolean>(false);
-  //authState$ = this.authState.asObservable();
 
   private loggedIn = new BehaviorSubject<boolean>(false);
   loggedIn$ = this.loggedIn.asObservable();
@@ -93,16 +50,6 @@ export class AuthService {
     return this.http.get<any>(`${this.baseUrl}/current-user`);
   }
 
-  //checkAuth() {
-  //  return this.http.get<any>(`${this.baseUrl}/current-user`, {
-  //    withCredentials: true
-  //  });
-  //}
-
-  //setLoggedIn(value: boolean) {
-  //  this.loggedIn.next(value);
-  //}
-
   getAuthStatus() {
     return this.loggedIn.value;
   }
@@ -125,17 +72,6 @@ export class AuthService {
     });
   }
 
-  //checkAuth() {
-  //  return this.http.get<any>(`${this.baseUrl}/current-user`, {
-  //    withCredentials: true
-  //  }).pipe(
-  //    tap((user) => {
-  //      this.loggedIn.next(true);
-  //      this.role.next(user.role);
-  //    })
-  //  );
-  //}
-
   checkAuth() {
     return this.http.get<any>(`${this.baseUrl}/current-user`, {
       withCredentials: true
@@ -146,13 +82,5 @@ export class AuthService {
       })
     );
   }
-  //checkAuth() {
-  //  this.http.get('http://localhost:5000/auth/check', { withCredentials: true })
-  //    .subscribe({
-  //      next: () => this.authState.next(true),
-  //      error: () => this.authState.next(false)
-  //    });
-  //}
-
   
 }
