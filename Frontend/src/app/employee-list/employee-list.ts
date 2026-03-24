@@ -5,6 +5,15 @@ import { Employee, EmployeeService } from '../services/employee-service';
 //import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 
+interface EmployeeQuery {
+  page: number;
+  pageSize: number;
+  searchTerm?: string;
+  departmentId?: number | null;
+}
+
+
+
 @Component({
   selector: 'app-employee-list',
   standalone: false,
@@ -27,6 +36,8 @@ export class EmployeeList implements OnInit {
 
   constructor(private employeeService: EmployeeService, public authService: AuthService) { }
 
+  
+
   ngOnInit(): void {
 
     const debouncedSearch$ = this.search$.pipe(
@@ -36,13 +47,12 @@ export class EmployeeList implements OnInit {
     );
 
     this.employees$ = combineLatest([
-      this.refresh$,
       this.departmentFilter$,
       debouncedSearch$
     ]).pipe(
-      switchMap(([_, departmentId, name]) => {
+      switchMap(([departmentId, name]) => {
 
-        if (name.length > 0) {
+        if (name) {
           return this.employeeService.searchEmployeeByName(
             name,
             departmentId ?? 0,
@@ -69,7 +79,53 @@ export class EmployeeList implements OnInit {
         return response.data;
       })
     );
+
+
   }
+
+  //ngOnInit(): void {
+
+  //  const debouncedSearch$ = this.search$.pipe(
+  //    map(value => value.trim()),
+  //    debounceTime(300),
+  //    distinctUntilChanged()
+  //  );
+
+  //  this.employees$ = combineLatest([
+  //    this.refresh$,
+  //    this.departmentFilter$,
+  //    debouncedSearch$
+  //  ]).pipe(
+  //    switchMap(([_, departmentId, name]) => {
+
+  //      if (name.length > 0) {
+  //        return this.employeeService.searchEmployeeByName(
+  //          name,
+  //          departmentId ?? 0,
+  //          this.pageNumber,
+  //          this.pageSize
+  //        );
+  //      }
+
+  //      if (departmentId) {
+  //        return this.employeeService.filterEmployeeByDepartmentId(
+  //          departmentId,
+  //          this.pageNumber,
+  //          this.pageSize
+  //        );
+  //      }
+
+  //      return this.employeeService.getAllEmployee(
+  //        this.pageNumber,
+  //        this.pageSize
+  //      );
+  //    }),
+  //    map((response: any) => {
+  //      this.totalPages = response.totalPages;
+  //      return response.data;
+  //    })
+  //  );
+  //}
 
   //searchEmployee() {
   //  this.pageNumber = 1;
